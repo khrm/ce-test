@@ -1,2 +1,2 @@
-# helloworld-go-ce
-Cloud Events Hello
+# ce-test
+For testing CloudEvents.
