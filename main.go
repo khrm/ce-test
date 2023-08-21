@@ -23,6 +23,7 @@ type Example struct {
 }
 
 func eventReceiver(ctx context.Context, event cloudevents.Event) (*cloudevents.Event, error) {
+	log.Printf("Handling EventID: %s", event.ID())
 	fmt.Printf("Got Event Context: %+v\n", event.Context)
 	data := &Example{}
 	if err := event.DataAs(data); err != nil {
@@ -36,11 +37,11 @@ func eventReceiver(ctx context.Context, event cloudevents.Event) (*cloudevents.E
 	responseEvent.SetSource("/test")
 	responseEvent.SetType("samples.http.test")
 	responseEvent.SetSubject(fmt.Sprintf("%s#%d", event.Source(), data.Sequence))
-
 	_ = responseEvent.SetData(cloudevents.ApplicationJSON, Example{
 		Sequence: data.Sequence,
 		Message:  "test done!",
 	})
+	log.Printf("Sending event with ID %s", responseEvent.ID())
 	return &responseEvent, nil
 }
 
@@ -49,7 +50,7 @@ func main() {
 	if err := envconfig.Process("", &env); err != nil {
 		log.Fatalf("Failed to process env var: %s", err)
 	}
-
+	log.Print("Starting CE-Test")
 	ctx := context.Background()
 
 	p, err := cloudevents.NewHTTP(cloudevents.WithPort(env.Port), cloudevents.WithPath(env.Path))
@@ -64,10 +65,10 @@ func main() {
 		log.Fatalf("failed to create client: %s", err.Error())
 	}
 
+	log.Printf("listening on :%d%s\n", env.Port, env.Path)
 	if err := c.StartReceiver(ctx, eventReceiver); err != nil {
 		log.Fatalf("failed to start receiver: %s", err.Error())
 	}
 
-	log.Printf("listening on :%d%s\n", env.Port, env.Path)
 	<-ctx.Done()
 }

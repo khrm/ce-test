@@ -26,31 +26,13 @@ spec:
             requests:
               cpu: 50m
               memory: 50Mi
-          readinessProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 20
-            timeoutSeconds: 5
-            periodSeconds: 10
-            successThreshold: 2
-            failureThreshold: 3
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 8080
-              scheme: HTTP
-            initialDelaySeconds: 20
-            timeoutSeconds: 5
-            periodSeconds: 10
-            successThreshold: 1
-            failureThreshold: 5
           name: ce-test
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
           imagePullPolicy: Always
-          image: 'docker.io/kbaig/ce-test:latest'
+          image: docker.io/kbaig/ce-test@sha256:60820f82aaabeb32c137650391fde6f27bd78825c6823b693bb851ab294e6888
       restartPolicy: Always
 ---
 apiVersion: v1
