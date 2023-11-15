@@ -1,2 +1,2 @@
 # ce-test
-For testing CloudEvents.
+For testing CloudEvents from sdk.
