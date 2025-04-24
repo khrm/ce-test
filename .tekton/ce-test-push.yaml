@@ -569,7 +569,8 @@ spec:
       optional: true
     - name: netrc
       optional: true
-  taskRunTemplate: {}
+  taskRunTemplate:
+    serviceAccountName: build-pipeline-ce-test
   workspaces:
   - name: git-auth
     secret:
